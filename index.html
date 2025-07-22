@@ -1,21 +1,86 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Custom Crossword</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piely's Weekly Crossword ❤️</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Piely's Weekly Crossword ❤️</h1>
-  <ul id="clue-list"></ul>
+    <div class="container">
+        <header class="header">
+            <h1>Weekly Crossword</h1>
+            <p id="week-display">Week of July 22, 2025</p>
+            <div class="week-nav">
+                <button class="btn btn-nav" id="prev-week">← Previous Week</button>
+                <button class="btn btn-nav" id="next-week">Next Week →</button>
+            </div>
+        </header>
 
-  <h2>➕ Add a New Clue</h2>
-  <form id="clue-form">
-    <input type="text" id="word" placeholder="Word" required />
-    <input type="text" id="clue" placeholder="Clue" required />
-    <button type="submit">Add</button>
-  </form>
+        <div class="controls">
+            <div class="btn-group">
+                <button class="btn btn-primary" id="generate-crossword">Generate New Crossword</button>
+                <button class="btn btn-secondary" id="add-clue-btn">Add New Clue</button>
+                <button class="btn btn-success" id="print-crossword">Print Crossword</button>
+            </div>
+            
+            <div class="status" id="status">
+                <div class="loading" id="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    Generating crossword...
+                </div>
+                <div class="message" id="message"></div>
+            </div>
+        </div>
 
-  <script src="script.js"></script>
+        <!-- Add New Clue Modal -->
+        <div class="modal" id="add-clue-modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add New Clue</h2>
+                <form id="add-clue-form">
+                    <div class="form-group">
+                        <label for="new-word">Word/Answer:</label>
+                        <input type="text" id="new-word" required placeholder="e.g., PHO TASTY">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-clue">Clue:</label>
+                        <textarea id="new-clue" required placeholder="e.g., Where we had our first date"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Clue</button>
+                        <button type="button" class="btn btn-secondary" id="cancel-add">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Crossword Display -->
+        <div class="crossword-container">
+            <div class="crossword-wrapper">
+                <div class="crossword-grid" id="crossword-grid">
+                    <!-- Grid will be generated here -->
+                </div>
+                <div class="clues-section">
+                    <div class="clues-column">
+                        <h3>Across</h3>
+                        <div class="clues-list" id="across-clues"></div>
+                    </div>
+                    <div class="clues-column">
+                        <h3>Down</h3>
+                        <div class="clues-list" id="down-clues"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solution Toggle -->
+        <div class="solution-controls">
+            <button class="btn btn-secondary" id="toggle-solution">Show Solution</button>
+            <button class="btn btn-primary" id="clear-answers">Clear All</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
