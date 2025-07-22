@@ -77,3 +77,15 @@ button:hover {
 .clues {
   margin-top: 1em;
 }
+
+.cell input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  text-align: center;
+  font-size: 18px;
+  text-transform: uppercase;
+  background: transparent;
+  font-weight: bold;
+  outline: none;
+}

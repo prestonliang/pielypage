@@ -139,15 +139,19 @@ function generateGrid(words) {
 // Render the crossword grid
 function renderGrid(grid, words) {
   let html = '<div class="grid">';
-  for (let row of grid) {
-    for (let cell of row) {
+  const inputs = [];
+
+  grid.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
       if (cell) {
-        html += `<div class="cell filled">${cell.letter}</div>`;
+        const id = `cell-${rowIndex}-${colIndex}`;
+        html += `<div class="cell filled"><input maxlength="1" id="${id}" data-letter="${cell.letter}" /></div>`;
+        inputs.push(id);
       } else {
-        html += `<div class="cell empty"></div>`;
+        html += '<div class="cell empty"></div>';
       }
-    }
-  }
+    });
+  });
   html += '</div>';
 
   html += '<div class="clues"><h3>Clues</h3><ol>';
@@ -157,5 +161,15 @@ function renderGrid(grid, words) {
   html += '</ol></div>';
 
   crosswordContainer.innerHTML = html;
+
+  // Input logic
+  inputs.forEach((id, idx) => {
+    const input = document.getElementById(id);
+    input.addEventListener('input', () => {
+      if (input.value.length === 1 && idx + 1 < inputs.length) {
+        document.getElementById(inputs[idx + 1]).focus();
+      }
+    });
+  });
 }
 
