@@ -62,7 +62,7 @@ function renderCrossword(data) {
 
 // Simple grid generation algorithm
 function generateGrid(words) {
-  const size = 30;
+  const size = 20;
   const grid = Array.from({ length: size }, () => Array(size).fill(null));
 
   // Place first word horizontally in the middle
