@@ -19,13 +19,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Add word to Google Sheet
 form.addEventListener('submit', async (e) => {
+  console.log("backend")
   e.preventDefault();
   const word = document.getElementById('word').value.trim();
   const clue = document.getElementById('clue').value.trim();
 
   if (!word || !clue) return;
-
-  console.log(word, clue)
 
   try {
     await fetch(`${API_URL}?action=addClue`, {
