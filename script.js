@@ -50,81 +50,67 @@ function renderCrossword(data) {
     clue: item.clue
   }));
 
-  const grid = generateGrid(words);
+  var layout = generateLayout(words);
+  var rows = layout.rows;
+  var cols = layout.cols;
+  var table = layout.table; // table as two-dimensional array
+  var output_html = layout.table_string; // table as plain text (with HTML line breaks)
+  var crosswordData = layout.result; // words along with orientation, position, startx, and starty
+  
+  // Determine grid size
+  const maxX = Math.max(...crosswordData.map(c => c.startx + (c.orientation === 'across' ? c.answer.length - 1 : 0)));
+  const maxY = Math.max(...crosswordData.map(c => c.starty + (c.orientation === 'down' ? c.answer.length - 1 : 0)));
 
-  if (!grid) {
-    crosswordContainer.innerHTML = '<p>Could not generate grid.</p>';
-    return;
-  }
+  // Create empty grid
+  const grid = Array.from({ length: maxY }, () =>
+    Array.from({ length: maxX }, () => null)
+  );
 
-  renderGrid(grid, words);
-}
-
-// Simple grid generation algorithm
-function generateGrid(words) {
-  const entries = words.map((w, i) => ({
-    word: w.answer.toLowerCase(),
-    clue: w.clue,
-    id: i + 1
-  }));
-
-  const layout = crosswordLayoutGenerator.generateLayout(entries);
-
-  if (!layout || layout.result !== 'success') {
-    console.warn('Layout failed:', layout);
-    return null;
-  }
-
-  const size = layout.size;
-  const grid = Array.from({ length: size.rows }, () => Array(size.cols).fill(null));
-
-  layout.entries.forEach(entry => {
-    const { x, y, direction, word, id } = entry;
-    for (let i = 0; i < word.length; i++) {
-      const row = direction === 'across' ? y : y + i;
-      const col = direction === 'across' ? x + i : x;
-      grid[row][col] = { letter: word[i].toUpperCase(), wordIndex: id };
+  // Fill the grid with placeholders and position numbers
+  crosswordData.forEach(({ answer, startx, starty, position, orientation }) => {
+    for (let i = 0; i < answer.length; i++) {
+      const x = startx - 1 + (orientation === "across" ? i : 0);
+      const y = starty - 1 + (orientation === "down" ? i : 0);
+      if (!grid[y][x]) grid[y][x] = { letter: "", number: null };
+      if (i === 0) grid[y][x].number = position;
     }
   });
 
-  return grid;
-}
+  console.log("broke after filling")
 
-
-// Render the crossword grid
-function renderGrid(grid, words) {
-  let html = '<div class="grid">';
-  const inputs = [];
-
+  // Generate HTML for grid
+  let html = `<table class="crossword">`;
   grid.forEach((row, rowIndex) => {
+    html += `<tr>`;
     row.forEach((cell, colIndex) => {
       if (cell) {
-        const id = `cell-${rowIndex}-${colIndex}`;
-        html += `<div class="cell filled"><input maxlength="1" id="${id}" data-letter="${cell.letter}" /></div>`;
-        inputs.push(id);
+        html += `<td class="cell">
+          ${cell.number !== null ? `<span class="number">${cell.number}</span>` : ""}
+          <input maxlength="1" data-x="${colIndex}" data-y="${rowIndex}">
+        </td>`;
       } else {
-        html += '<div class="cell empty"></div>';
+        html += `<td class="empty"></td>`;
       }
     });
+    html += `</tr>`;
   });
-  html += '</div>';
+  html += `</table>`;
 
-  html += '<div class="clues"><h3>Clues</h3><ol>';
-  for (let i = 0; i < words.length; i++) {
-    html += `<li>${words[i].clue}</li>`;
-  }
-  html += '</ol></div>';
+  // Generate clues
+  const acrossClues = crosswordData.filter(c => c.orientation === "across");
+  const downClues = crosswordData.filter(c => c.orientation === "down");
 
+  html += `<div class="clues">
+    <div class="clue-group">
+      <h3>Across</h3>
+      <ul>${acrossClues.map(c => `<li><strong>${c.position}</strong>. ${c.clue}</li>`).join("")}</ul>
+    </div>
+    <div class="clue-group">
+      <h3>Down</h3>
+      <ul>${downClues.map(c => `<li><strong>${c.position}</strong>. ${c.clue}</li>`).join("")}</ul>
+    </div>
+  </div>`;
+
+  // Set innerHTML
   crosswordContainer.innerHTML = html;
-
-  // Input logic
-  inputs.forEach((id, idx) => {
-    const input = document.getElementById(id);
-    input.addEventListener('input', () => {
-      if (input.value.length === 1 && idx + 1 < inputs.length) {
-        document.getElementById(inputs[idx + 1]).focus();
-      }
-    });
-  });
 }
-
