@@ -24,30 +24,6 @@ checkButton.addEventListener('click', (e) => {
   checkAnswer();
 });
 
-// Add word to Google Sheet
-form.addEventListener('submit', async (e) => {
-  //console.log("backend");
-  e.preventDefault();
-  const word = document.getElementById('word').value.trim();
-  const clue = document.getElementById('clue').value.trim();
-
-  if (!word || !clue) return;
-
-  try {
-    await fetch(`${API_URL}?action=addClue`, {
-      method: 'POST',
-      body: JSON.stringify({ word, clue }),
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    alert('Clue added! It may appear in next week\'s puzzle.');
-    form.reset();
-  } catch (error) {
-    alert('Failed to add clue. Please try again.');
-    console.error(error);
-  }
-});
-
 // Render placeholder crossword clues
 function renderCrossword(data) {
   if (!data.clues || data.clues.length === 0) {
