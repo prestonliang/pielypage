@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Check Answer
 document.addEventListener('checkAnswer', async () => {
+  console.log("answer clicked")
   try {
     checkAnswer();
   } catch (error) {
