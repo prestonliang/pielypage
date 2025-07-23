@@ -3,6 +3,8 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwjJYB9C1x9ebX1fuDXaGZ5
 const crosswordContainer = document.getElementById('crossword');
 const form = document.getElementById('add-word-form');
 
+let crosswordData = []
+
 // Load weekly crossword
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -22,6 +24,8 @@ form.addEventListener('submit', async (e) => {
   const clue = document.getElementById('clue').value.trim();
 
   if (!word || !clue) return;
+
+  console.log(word, clue)
 
   try {
     await fetch(`${API_URL}?action=addClue`, {
@@ -55,7 +59,7 @@ function renderCrossword(data) {
   var cols = layout.cols;
   var table = layout.table; // table as two-dimensional array
   var output_html = layout.table_string; // table as plain text (with HTML line breaks)
-  var crosswordData = layout.result; // words along with orientation, position, startx, and starty
+  crosswordData = layout.result; // words along with orientation, position, startx, and starty
   
   // Determine grid size
   const maxX = Math.max(...crosswordData.map(c => c.startx + (c.orientation === 'across' ? c.answer.length - 1 : 0)));
@@ -75,9 +79,6 @@ function renderCrossword(data) {
       if (i === 0) grid[y][x].number = position;
     }
   });
-
-  console.log("broke after filling")
-
   // Generate HTML for grid
   let html = `<table class="crossword">`;
   grid.forEach((row, rowIndex) => {
@@ -113,4 +114,23 @@ function renderCrossword(data) {
 
   // Set innerHTML
   crosswordContainer.innerHTML = html;
+}
+
+function checkAnswer() {
+  // check if crossword is right. make incorrect boxes have red tint, correct boxes green have green tint
+  crosswordData.forEach(({ answer, startx, starty, orientation }) => {
+    for (let i = 0; i < answer.length; i++) {
+      const x = startx - 1 + (orientation === "across" ? i : 0);
+      const y = starty - 1 + (orientation === "down" ? i : 0);
+      const input = document.querySelector(`input[data-x="${x}"][data-y="${y}"]`);
+      const userLetter = input.value.toUpperCase();
+      const correctLetter = answer[i].toUpperCase();
+
+      if (userLetter === correctLetter) {
+        input.style.backgroundColor = "#c8e6c9"; // light green
+      } else {
+        input.style.backgroundColor = "#ffcdd2"; // light red
+      }
+    }
+  });
 }
