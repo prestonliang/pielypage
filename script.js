@@ -17,6 +17,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 });
 
+// Check Answer
+document.addEventListener('checkAnswer', async () => {
+  try {
+    checkAnswer()
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 // Add word to Google Sheet
 form.addEventListener('submit', async (e) => {
   //console.log("backend");
