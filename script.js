@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Check Answer
 document.addEventListener('checkAnswer', async () => {
   try {
-    checkAnswer()
+    checkAnswer();
   } catch (error) {
     console.error(error);
   }
@@ -88,6 +88,7 @@ function renderCrossword(data) {
     }
   });
   // Generate HTML for grid
+  console.log("generating...");
   let html = `<table class="crossword">`;
   grid.forEach((row, rowIndex) => {
     html += `<tr>`;
