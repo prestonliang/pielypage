@@ -1,6 +1,7 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbwjJYB9C1x9ebX1fuDXaGZ5dCbE_bLhjbntodaA0zKMrXH9cTfedPetpeTcDx3yZpG_/exec';
 
 const crosswordContainer = document.getElementById('crossword');
+const checkButton = document.getElementById('checkAnswer');
 const form = document.getElementById('add-word-form');
 
 let crosswordData = []
@@ -18,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Check Answer
-document.getElementById('checkAnswer').addEventListener('click', (e) => {
+checkButton.addEventListener('click', (e) => {
   e.preventDefault(); // optional, only needed if it's inside a <form>
   checkAnswer();
 });
@@ -123,7 +124,8 @@ function renderCrossword(data) {
 }
 
 function checkAnswer() {
-  console.log("checking answer")
+  alert("button works");
+  console.log("checking answer");
   // check if crossword is right. make incorrect boxes have red tint, correct boxes green have green tint
   crosswordData.forEach(({ answer, startx, starty, orientation }) => {
     for (let i = 0; i < answer.length; i++) {
