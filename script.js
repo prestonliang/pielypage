@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 // Add word to Google Sheet
 form.addEventListener('submit', async (e) => {
-  console.log("backend");
+  //console.log("backend");
   e.preventDefault();
   const word = document.getElementById('word').value.trim();
   const clue = document.getElementById('clue').value.trim();
