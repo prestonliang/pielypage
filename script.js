@@ -18,13 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // Check Answer
-document.addEventListener('checkAnswer', async () => {
-  console.log("answer clicked")
-  try {
-    checkAnswer();
-  } catch (error) {
-    console.error(error);
-  }
+document.getElementById('checkAnswer').addEventListener('click', (e) => {
+  e.preventDefault(); // optional, only needed if it's inside a <form>
+  checkAnswer();
 });
 
 // Add word to Google Sheet
