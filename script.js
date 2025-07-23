@@ -124,7 +124,6 @@ function renderCrossword(data) {
 }
 
 function checkAnswer() {
-  alert("button works");
   console.log("checking answer");
   // check if crossword is right. make incorrect boxes have red tint, correct boxes green have green tint
   crosswordData.forEach(({ answer, startx, starty, orientation }) => {
