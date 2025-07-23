@@ -62,79 +62,34 @@ function renderCrossword(data) {
 
 // Simple grid generation algorithm
 function generateGrid(words) {
-  const size = 20;
-  const grid = Array.from({ length: size }, () => Array(size).fill(null));
+  const entries = words.map((w, i) => ({
+    word: w.answer.toLowerCase(),
+    clue: w.clue,
+    id: i + 1
+  }));
 
-  // Place first word horizontally in the middle
-  let [first, ...rest] = words;
-  const mid = Math.floor(size / 2);
-  const startCol = mid - Math.floor(first.answer.length / 2);
+  const layout = crosswordLayoutGenerator.generateLayout(entries);
 
-  for (let i = 0; i < first.answer.length; i++) {
-    grid[mid][startCol + i] = { letter: first.answer[i], wordIndex: 0 };
+  if (!layout || layout.result !== 'success') {
+    console.warn('Layout failed:', layout);
+    return null;
   }
 
-  // Place remaining words
-  for (let w = 0; w < rest.length; w++) {
-    const word = rest[w].answer;
-    let placed = false;
+  const size = layout.size;
+  const grid = Array.from({ length: size.rows }, () => Array(size.cols).fill(null));
 
-    outer: for (let i = 0; i < word.length; i++) {
-      for (let r = 0; r < size; r++) {
-        for (let c = 0; c < size; c++) {
-          const cell = grid[r][c];
-          if (cell && cell.letter === word[i]) {
-            // Try placing vertically
-            const startRow = r - i;
-            if (startRow >= 0 && startRow + word.length <= size) {
-              let conflict = false;
-              for (let j = 0; j < word.length; j++) {
-                const existing = grid[startRow + j][c];
-                if (existing && existing.letter !== word[j]) {
-                  conflict = true;
-                  break;
-                }
-              }
-              if (!conflict) {
-                for (let j = 0; j < word.length; j++) {
-                  grid[startRow + j][c] = { letter: word[j], wordIndex: w + 1 };
-                }
-                placed = true;
-                break outer;
-              }
-            }
-
-            // Try placing horizontally
-            const startCol = c - i;
-            if (startCol >= 0 && startCol + word.length <= size) {
-              let conflict = false;
-              for (let j = 0; j < word.length; j++) {
-                const existing = grid[r][startCol + j];
-                if (existing && existing.letter !== word[j]) {
-                  conflict = true;
-                  break;
-                }
-              }
-              if (!conflict) {
-                for (let j = 0; j < word.length; j++) {
-                  grid[r][startCol + j] = { letter: word[j], wordIndex: w + 1 };
-                }
-                placed = true;
-                break outer;
-              }
-            }
-          }
-        }
-      }
+  layout.entries.forEach(entry => {
+    const { x, y, direction, word, id } = entry;
+    for (let i = 0; i < word.length; i++) {
+      const row = direction === 'across' ? y : y + i;
+      const col = direction === 'across' ? x + i : x;
+      grid[row][col] = { letter: word[i].toUpperCase(), wordIndex: id };
     }
-
-    if (!placed) {
-      console.warn('Could not place word:', word);
-    }
-  }
+  });
 
   return grid;
 }
+
 
 // Render the crossword grid
 function renderGrid(grid, words) {
