@@ -53,7 +53,7 @@ function renderCrossword(data) {
   );
 
   console.log("grid created");
-  console.log(crosswordData);
+  //console.log(crosswordData);
 
   // Fill the grid with placeholders and position numbers
   crosswordData.forEach(({ answer, startx, starty, position, orientation }) => {
