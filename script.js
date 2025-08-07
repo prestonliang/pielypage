@@ -53,12 +53,11 @@ function renderCrossword(data) {
   );
 
   console.log("grid created");
-  //console.log(crosswordData);
+  console.log(crosswordData);
 
   // Fill the grid with placeholders and position numbers
   crosswordData.forEach(({ answer, startx, starty, position, orientation }) => {
     for (let i = 0; i < answer.length; i++) {
-      console.log(answer);
       const x = startx - 1 + (orientation === "across" ? i : 0);
       const y = starty - 1 + (orientation === "down" ? i : 0);
       if (!grid[y][x]) grid[y][x] = { letter: "", number: null };
