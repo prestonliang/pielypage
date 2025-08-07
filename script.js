@@ -60,10 +60,11 @@ function renderCrossword(data) {
     console.log("begin loop");
     for (let i = 0; i < answer.length; i++) {
       const x = startx - 1 + (orientation === "across" ? i : 0);
-      console.log(startx);
       const y = starty - 1 + (orientation === "down" ? i : 0);
-      console.log(starty);
-      if (!grid[y][x]) grid[y][x] = { letter: "", number: null };
+      if (!grid[y][x]) {
+        console.log("not grid[y][x]");
+        grid[y][x] = { letter: "", number: null };
+      }
       if (i === 0) grid[y][x].number = position;
     }
   });
