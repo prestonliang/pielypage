@@ -57,7 +57,7 @@ function renderCrossword(data) {
 
   // Fill the grid with placeholders and position numbers
   crosswordData.forEach(({ answer, startx, starty, position, orientation }) => {
-    console.log("begin loop");
+    console.log("added one");
     for (let i = 0; i < answer.length; i++) {
       const x = startx - 1 + (orientation === "across" ? i : 0);
       const y = starty - 1 + (orientation === "down" ? i : 0);
