@@ -44,8 +44,18 @@ function renderCrossword(data) {
   crosswordData = layout.result; // words along with orientation, position, startx, and starty
   
   // Determine grid size
-  const maxX = Math.max(...crosswordData.map(c => c.startx + (c.orientation === 'across' ? c.answer.length - 1 : 0))) + 1;
-  const maxY = Math.max(...crosswordData.map(c => c.starty + (c.orientation === 'down' ? c.answer.length - 1 : 0))) + 1;
+  const validCrosswordData = crosswordData.filter(c => 
+    typeof c.startx === 'number' && 
+    typeof c.starty === 'number' && 
+    (c.orientation === 'across' || c.orientation === 'down')
+  );
+
+  const maxX = Math.max(...validCrosswordData.map(c => 
+    c.startx + (c.orientation === 'across' ? c.answer.length - 1 : 0)
+  ));
+  const maxY = Math.max(...validCrosswordData.map(c => 
+    c.starty + (c.orientation === 'down' ? c.answer.length - 1 : 0)
+  ));
 
   // Create empty grid
   const grid = Array.from({ length: maxY }, () =>
@@ -61,8 +71,6 @@ function renderCrossword(data) {
     for (let i = 0; i < answer.length; i++) {
       const x = startx - 1 + (orientation === "across" ? i : 0);
       const y = starty - 1 + (orientation === "down" ? i : 0);
-      console.log(maxX)
-      console.log(maxY)
       if (!grid[y][x]) {
         console.log("not grid[y][x]");
         grid[y][x] = { letter: "", number: null };
