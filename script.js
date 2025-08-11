@@ -61,6 +61,8 @@ function renderCrossword(data) {
     for (let i = 0; i < answer.length; i++) {
       const x = startx - 1 + (orientation === "across" ? i : 0);
       const y = starty - 1 + (orientation === "down" ? i : 0);
+      console.log("checking")
+      console.log(x)
       if (!grid[y][x]) {
         console.log("not grid[y][x]");
         grid[y][x] = { letter: "", number: null };
